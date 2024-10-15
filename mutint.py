@@ -1,4 +1,4 @@
-# mint.py
+# mint.py Section 2.4
 from functools import total_ordering
 
 @total_ordering

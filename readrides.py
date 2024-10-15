@@ -1,6 +1,40 @@
-# readrides.py Exercises 2.1 and 2.2
+# readrides.py Exercises 2.1, 2.2, 2.5 
 
 import csv
+import collections.abc
+
+class RideData(collections.abc.Sequence):
+    def __init__(self):
+        # Each value is a list with all the values (a column)
+        self.routes = []
+        self.dates = []
+        self.daytypes = []
+        self.numrides = []
+        
+    def __len__(self):
+        # All lists assumed to have the same length
+        return len(self.routes)
+
+    def __getitem__(self, index):
+        if isinstance(index, int):
+            return { 'route': self.routes[index],
+                     'date': self.dates[index],
+                     'daytype': self.daytypes[index],
+                     'rides': self.numrides[index] }
+        
+        elif isinstance(index, slice):
+            ridedata_slice = RideData()
+            ridedata_slice.routes = self.routes[index]
+            ridedata_slice.dates = self.dates[index]
+            ridedata_slice.daytypes = self.daytypes[index]
+            ridedata_slice.numrides = self.numrides[index]
+            return ridedata_slice
+
+    def append(self, d):
+        self.routes.append(d['route'])
+        self.dates.append(d['date'])
+        self.daytypes.append(d['daytype'])
+        self.numrides.append(d['rides'])
 
 def read_rides_as_tuples(filename):
     '''
@@ -23,7 +57,7 @@ def read_rides_as_dictionary(filename):
     '''
     Read the bus ride data as a list of dictionaries
     '''
-    records = []
+    records = RideData() #[]
     with open(filename) as f:
         rows = csv.reader(f)
         headings = next(rows)     # Skip headers
@@ -108,14 +142,17 @@ def read_rides_as_slotted_class(filename):
     return records
 
 if __name__ == '__main__':
-    #import tracemalloc
-    #tracemalloc.start()
+    import tracemalloc
+    tracemalloc.start()
     #rows = read_rides_as_tuples('Data/ctabus.csv')
-    #rows = read_rides_as_dictionary('Data/ctabus.csv')
+    rows = read_rides_as_dictionary('Data/ctabus.csv')
     #rows = read_rides_as_class('Data/ctabus.csv')
     #rows = read_rides_as_namedtuple('Data/ctabus.csv')
-    rows = read_rides_as_slotted_class('Data/ctabus.csv')
-    #print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
+    #rows = read_rides_as_slotted_class('Data/ctabus.csv')
+    print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
+    r = rows[0:10]
+    print(len(r), r[0])
+    exit()
     from collections import Counter
     totals = Counter()
     for s in rows:
