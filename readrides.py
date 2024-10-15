@@ -1,4 +1,4 @@
-# readrides.py
+# readrides.py Exercises 2.1 and 2.2
 
 import csv
 
@@ -107,13 +107,31 @@ def read_rides_as_slotted_class(filename):
             records.append(row_class)
     return records
 
-
 if __name__ == '__main__':
-    import tracemalloc
-    tracemalloc.start()
+    #import tracemalloc
+    #tracemalloc.start()
     #rows = read_rides_as_tuples('Data/ctabus.csv')
     #rows = read_rides_as_dictionary('Data/ctabus.csv')
     #rows = read_rides_as_class('Data/ctabus.csv')
     #rows = read_rides_as_namedtuple('Data/ctabus.csv')
     rows = read_rides_as_slotted_class('Data/ctabus.csv')
-    print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
+    #print('Memory Use: Current %d, Peak %d' % tracemalloc.get_traced_memory())
+    from collections import Counter
+    totals = Counter()
+    for s in rows:
+        totals[s.route] += s.rides
+        if s.date == "02/02/2011" and s.rides == "22":
+            print(f"{s.rides} people rode the number 22 bus on Feb 2 2011.")
+    print(f"{len(totals)} routes exist in Chicago.")
+    print(totals.most_common(3))
+    #for route in totals:
+    #    print(f"{totals[route]} rides are taken in route {route}")
+    increase = Counter()
+    for s in rows:
+        if '2001' in s.date:
+            increase[s.route] -= s.rides
+        elif '2011' in s.date:
+            increase[s.route] += s.rides
+    
+    print(increase.most_common(5))
+    
