@@ -1,7 +1,8 @@
 # Exercise 3.1 and 3.3
 
 class Stock:
-    types = (str, int, float)
+    __slots__ = ('name', '_shares', '_price')
+    _types = (str, int, float)
     def __init__(self, name, shares, price):
         self.name = name
         self.shares = shares
@@ -9,11 +10,37 @@ class Stock:
 
     @classmethod
     def from_row(cls, row):
-        values = [func(val) for func, val in zip(cls.types, row)]
+        values = [func(val) for func, val in zip(cls._types, row)]
         return cls(*values)
 
+    @property
     def cost(self):
         return self.shares * self.price
+
+    @property
+    def shares(self):
+        return self._shares
+
+    @property
+    def price(self):
+        return self._price
+
+    @shares.setter
+    def shares(self, value):
+        if not isinstance(value, self._types[1]):
+            raise TypeError(f"Expected {self._types[1]}")
+        elif value < 0:
+            raise ValueError("shares must be >= 0")
+        self._shares = value
+    
+    @price.setter
+    def price(self, value):
+        if not isinstance(value, self._types[2]):
+            raise TypeError(f"Expected {self._types[2]}")
+        elif value < 0:
+            raise ValueError("price must be >= 0")
+        self._price = value
+    
     def sell(self, amt):
         self.shares -= amt
 
