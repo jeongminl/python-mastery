@@ -1,10 +1,17 @@
-# Exercise 3.1
+# Exercise 3.1 and 3.3
 
 class Stock:
+    types = (str, int, float)
     def __init__(self, name, shares, price):
         self.name = name
         self.shares = shares
         self.price = price
+
+    @classmethod
+    def from_row(cls, row):
+        values = [func(val) for func, val in zip(cls.types, row)]
+        return cls(*values)
+
     def cost(self):
         return self.shares * self.price
     def sell(self, amt):
@@ -20,7 +27,7 @@ def read_portfolio(filename):
         rows = csv.reader(f)
         headings = next(rows)     # Skip headers
         for row in rows:
-            row_class = Stock(row[0], int(row[1]), float(row[2]))
+            row_class = Stock.from_row(row[0], row[1], row[2])
             records.append(row_class)
     return records
 
