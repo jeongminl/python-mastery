@@ -43,6 +43,12 @@ class Stock:
     
     def sell(self, amt):
         self.shares -= amt
+    
+    def __repr__(self):
+        return f"Stock('{self.name}', {self.shares}, {self.price})"
+    
+    def __eq__(self, other):
+        return isinstance(other, Stock) and ((self.name, self.shares, self.price) == (other.name, other.shares, other.price))
 
 def read_portfolio(filename):
     import csv
