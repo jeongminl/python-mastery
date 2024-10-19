@@ -1,8 +1,18 @@
 # validate.py
 class Validator:
+    def __init__(self, name):
+        self.name = name
+    
+    def __set_name__(self, cls, name):
+        self.name = name
+
     @classmethod
     def check(cls, value):
         return value
+    
+    def __set__(self, instance, value):
+        instance.__dict__[self.name] = self.check(value)
+
 
 class Typed(Validator):
     expected_type = object
@@ -45,43 +55,11 @@ class NonEmptyString(String, NonEmpty):
     pass
 
 class Stock:
-    __slots__ = ('name', '_shares', '_price')
-    def __init__(self, name, shares, price):
+    name   = String()
+    shares = PositiveInteger()
+    price  = PositiveFloat()
+
+    def __init__(self,name,shares,price):
         self.name = name
         self.shares = shares
         self.price = price
-
-    @classmethod
-    def from_row(cls, row):
-        values = [func(val) for func, val in zip(cls._types, row)]
-        return cls(*values)
-
-    @property
-    def cost(self):
-        return self.shares * self.price
-
-    @property
-    def shares(self):
-        return self._shares
-
-    @property
-    def price(self):
-        return self._price
-
-    @shares.setter
-    def shares(self, value):
-        PositiveInteger.check(value)
-        self._shares = value
-    
-    @price.setter
-    def price(self, value):
-        PositiveFloat.check(value)
-        self._price = value
-    def sell(self, amt):
-        self.shares -= amt
-    
-    def __repr__(self):
-        return f"Stock('{self.name}', {self.shares}, {self.price})"
-    
-    def __eq__(self, other):
-        return isinstance(other, Stock) and ((self.name, self.shares, self.price) == (other.name, other.shares, other.price))
