@@ -1,9 +1,10 @@
 # Exercise 3.2 and 3.5
-
-class TableFormatter:
+from abc import ABC, abstractmethod
+class TableFormatter(ABC):
+    @abstractmethod
     def headings(self, headers):
         raise NotImplementedError()
-
+    @abstractmethod
     def row(self, rowdata):
         raise NotImplementedError()
 
@@ -24,13 +25,13 @@ class CSVTableFormatter(TableFormatter):
 
 class HTMLTableFormatter(TableFormatter):
     def headings(self, headers):
-        print('<tr>', endl='')
-        print(' '.join('<th>%s</th>' % h for h in headers), endl='')
+        print('<tr>', end='')
+        print(' '.join('<th>%s</th>' % h for h in headers), end='')
         print('</tr>')
 
     def row(self, rowdata):
-        print('<tr>', endl='')
-        print(' '.join('<td>%s</td>' % r for r in rowdata), endl='')
+        print('<tr>', end='')
+        print(' '.join('<td>%s</td>' % r for r in rowdata), end='')
         print('</tr>')
 
 def create_formatter(choice):
@@ -43,6 +44,8 @@ def create_formatter(choice):
         return HTMLTableFormatter()
 
 def print_table(records, fields, formatter):
+    if not isinstance(formatter, TableFormatter):
+        raise TypeError("Expected a TableFormatter")
     formatter.headings(fields)
     for r in records:
         rowdata = [getattr(r, fieldname) for fieldname in fields]
