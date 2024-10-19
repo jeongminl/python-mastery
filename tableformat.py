@@ -1,5 +1,15 @@
 # Exercise 3.2 and 3.5
 from abc import ABC, abstractmethod
+class ColumnFormatMixin:
+    formats = []
+    def row(self, rowdata):
+        rowdata = [(fmt % d) for fmt, d in zip(self.formats, rowdata)]
+        super().row(rowdata)
+
+class UpperHeadersMixin:
+    def headings(self, headers):
+        super().headings([h.upper() for h in headers])
+
 class TableFormatter(ABC):
     @abstractmethod
     def headings(self, headers):
@@ -34,14 +44,24 @@ class HTMLTableFormatter(TableFormatter):
         print(' '.join('<td>%s</td>' % r for r in rowdata), end='')
         print('</tr>')
 
-def create_formatter(choice):
+def create_formatter(choice, column_formats=False, upper_headers=False):
     import stock, reader, tableformat
     if choice.lower() == 'text':
-        return TextTableFormatter()
+        formatter = TextTableFormatter
     elif choice.lower() == 'csv':
-        return CSVTableFormatter()
+        formatter = CSVTableFormatter
     elif choice.lower() == 'html':
-        return HTMLTableFormatter()
+        formatter = HTMLTableFormatter
+    if column_formats:
+        class Fmt(ColumnFormatMixin, formatter):
+            formats = column_formats
+        return Fmt()
+    elif upper_headers:
+        class Fmt(UpperHeadersMixin, formatter):
+            pass
+        return Fmt()
+
+
 
 def print_table(records, fields, formatter):
     if not isinstance(formatter, TableFormatter):
