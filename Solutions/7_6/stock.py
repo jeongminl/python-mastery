@@ -15,7 +15,7 @@ class Stock(Structure):
         self.shares -= nshares
 
 if __name__ == '__main__':
-    from reader import read_csv_as_instances
+    from reader_class import read_csv_as_instances
     from tableformat import create_formatter, print_table
     
     portfolio = read_csv_as_instances('../../Data/portfolio.csv', Stock)

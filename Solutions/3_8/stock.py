@@ -53,7 +53,7 @@ class Stock:
 # Sample
 if __name__ == '__main__':
     import tableformat
-    import reader
+    import reader_class
     from tableformat import (
         print_table,
         create_formatter,
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         UpperHeadersMixin
         )
 
-    portfolio = reader.read_csv_as_instances('../../Data/portfolio.csv', Stock)
+    portfolio = reader_class.read_csv_as_instances('../../Data/portfolio.csv', Stock)
 
     class PortfolioFormatter(ColumnFormatMixin, TextTableFormatter):
         formats = ['%s','%d','%0.2f']

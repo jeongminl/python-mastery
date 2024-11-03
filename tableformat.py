@@ -45,7 +45,7 @@ class HTMLTableFormatter(TableFormatter):
         print('</tr>')
 
 def create_formatter(choice, column_formats=False, upper_headers=False):
-    import stock, reader, tableformat
+    import stock, reader_class, tableformat
     if choice.lower() == 'text':
         formatter = TextTableFormatter
     elif choice.lower() == 'csv':

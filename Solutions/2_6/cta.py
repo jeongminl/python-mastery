@@ -9,8 +9,8 @@ tracemalloc.start()
 
 if True:
     # Part (b)
-    import reader
-    rows = reader.read_csv_as_dicts('../../Data/ctabus.csv',
+    import reader_class
+    rows = reader_class.read_csv_as_dicts('../../Data/ctabus.csv',
                                     [sys.intern, sys.intern, sys.intern, int])
 else:
     # Part (d) - Challenge

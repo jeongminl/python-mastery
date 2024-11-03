@@ -44,9 +44,9 @@ class Stock:
 
 # Sample
 if __name__ == '__main__':
-    import reader
+    import reader_class
     from tableformat import create_formatter, print_table
 
-    portfolio = reader.read_csv_as_instances('../../Data/portfolio.csv', Stock)
+    portfolio = reader_class.read_csv_as_instances('../../Data/portfolio.csv', Stock)
     formatter = create_formatter('text')
     print_table(portfolio,['name','shares','price'], formatter)
